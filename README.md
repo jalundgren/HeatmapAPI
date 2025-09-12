@@ -38,6 +38,6 @@ HeatmapAPI returns your heat map as a **PNG image** that can be overlaid in real
 
 ---
 
-## Quick Start
+## Live Example
 
-<a href="https://jalundgren.github.io/HeatmapAPI/web/about.html)">See this working example here.</a>
+<a href="https://jalundgren.github.io/HeatmapAPI/web/about.html">See this working example here.</a>
