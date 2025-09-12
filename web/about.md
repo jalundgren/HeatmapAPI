@@ -11,8 +11,8 @@
     <style>
         /* Set the size of the map */
         #map {
-            width: 400px;
-            height: 300px;
+            width: 600px;
+            height: 400px;
         }
         .vertical-section {
             margin: 20px 0;
@@ -95,8 +95,8 @@
             }).join(",");
 
             const heatmapParameters = {
-                Width: 400,
-                Height: 300,
+                Width: 600,
+                Height: 400,
                 Lat1: sw.lat(),
                 Lat2: ne.lat(),
                 Lon1: sw.lng(),
@@ -178,7 +178,7 @@ Unlike the built-in Google Maps heatmap layer, this service is designed to handl
 </section>
 
 <section class="vertical-section">
-    <div id="map" style="width: 400px; height: 300px;"></div>
+    <div id="map" style="width: 600px; height: 400px;"></div>
 </section>
 
 <section class="vertical-section">
@@ -232,8 +232,8 @@ Unlike the built-in Google Maps heatmap layer, this service is designed to handl
             }).join(",");
 
             const heatmapParameters = {
-                Width: 400,
-                Height: 300,
+                Width: 600,
+                Height: 400,
                 Lat1: sw.lat(),
                 Lat2: ne.lat(),
                 Lon1: sw.lng(),
