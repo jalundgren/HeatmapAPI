@@ -5,7 +5,7 @@
     <meta name="description" content="Examples of heatmaps created using HeatmapAPI.com, showcasing different implementations and use cases.">
     <meta property="og:title" content="HeatmapAPI - Examples">
     <meta property="og:description" content="Check out examples of our heatmaps, showcasing different visualization approaches.">
-    <title>Examples - HeatmapAPI.com</title>
+    <title>HeatmapAPI.com</title>
     <link rel="stylesheet" href="styles.css">
 
     <style>
@@ -107,7 +107,6 @@
                 DataPoints: dataPointsString
             };
 
-
             callJsonService(heatmapParameters);
         } catch (error) {
             console.error("Error preparing data points string:", error.message);
@@ -169,11 +168,11 @@
 <section class="vertical-section">
     <h1>Example</h1>
     <p>
-		This map is a live example created with JavaScript and the HeatMapAPI. It connects a Google Map to the API in a backend service, as shown in the JSON POST example below.
+This map is a live example created with JavaScript and the HeatMapAPI. It connects a Google Map to the API in a backend service, as shown in the JSON POST example below.
 			
-		The script generates 50 random points and overlays them on a Google Map as a heatmap using an image overlay. You can interact with the map by panning and zooming, which triggers a real-time rendering of the heatmap. Each image is generated on the fly, so every request produces a fresh result. This makes it easy to adjust data dynamically while keeping the visualization responsive and flexible, rather than relying on static or tiled images.
+The script generates 50 random points and overlays them on a Google Map as a heatmap using an image overlay. You can interact with the map by panning and zooming, which triggers a real-time rendering of the heatmap. Each image is generated on the fly, so every request produces a fresh result. This makes it easy to adjust data dynamically while keeping the visualization responsive and flexible, rather than relying on static or tiled images.
 		
-		Unlike the built-in Google Maps heatmap layer, this service is designed to handle very large datasets and render them quickly. You can send a huge number of data points in a single request, and the API produces a heatmap image on the fly. Because the heavy lifting happens in the backend, it avoids the performance issues that come up when trying to push all the rendering into the browser.
+Unlike the built-in Google Maps heatmap layer, this service is designed to handle very large datasets and render them quickly. You can send a huge number of data points in a single request, and the API produces a heatmap image on the fly. Because the heavy lifting happens in the backend, it avoids the performance issues that come up when trying to push all the rendering into the browser.
 
 	</p>
 </section>
