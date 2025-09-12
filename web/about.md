@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -165,18 +164,18 @@
     }
 </script>
 
-    <header>
-        <div class="logo">
-            <img src="HeatmapAPILogoLg.png" alt="HeatmapAPI Logo">
-        </div>
-    </header>
 <main>
 
 <section class="vertical-section">
     <h1>Example</h1>
     <p>
-        This map is an example of a heatmap created using JavaScript and the HeatMapAPI. Below the map, you can see the script that generates 50 random points and overlays them on a Google map as a heatmap using an image overlay. You can interact with the map by panning and zooming, which will trigger a real-time rendering of the heatmap. Each heatmap is generated on the fly, meaning you always get a fresh image, allowing for dynamic adjustment of data points for each request. These heatmaps are not static or tiled images, offering flexibility and responsiveness.
-    </p>
+		This map is a live example created with JavaScript and the HeatMapAPI. It connects a Google Map to the API in a backend service, as shown in the JSON POST example below.
+			
+		The script generates 50 random points and overlays them on a Google Map as a heatmap using an image overlay. You can interact with the map by panning and zooming, which triggers a real-time rendering of the heatmap. Each image is generated on the fly, so every request produces a fresh result. This makes it easy to adjust data dynamically while keeping the visualization responsive and flexible, rather than relying on static or tiled images.
+		
+		Unlike the built-in Google Maps heatmap layer, this service is designed to handle very large datasets and render them quickly. You can send a huge number of data points in a single request, and the API produces a heatmap image on the fly. Because the heavy lifting happens in the backend, it avoids the performance issues that come up when trying to push all the rendering into the browser.
+
+	</p>
 </section>
 
 <section class="vertical-section">
