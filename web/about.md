@@ -384,6 +384,12 @@ Unlike the built-in Google Maps heatmap layer, this service is designed to handl
     </p>
 </section>
 
+<section>
+	<h3>Contact</h3>
+	<a href="https://github.com/your-username">Contact me on GitHub</a> for questions about hosting your own version of the API or implementing commercial solutions.
+
+</section>
+
 
 </main>
 
