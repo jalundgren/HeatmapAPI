@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="HeatMapAPI turns your location data into fast, consistent heat maps that stay smooth as you explore.">
+  <title>HeatMapAPI — Density tiles built for interactive maps</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="./assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell nav">
+      <a class="brand" href="#top"><span class="brand-mark">H</span> HeatMapAPI</a>
+      <button class="menu-button" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu-button>☰</button>
+      <nav class="navigation" data-navigation data-open="false">
+        <a href="#about">About</a><a href="#why">Why HeatMapAPI</a><a href="#demo">Live demo</a><a href="#docs">Documentation</a>
+        <a class="button secondary" data-github-link href="https://github.com/jalundgren/HeatmapAPI">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <p class="eyebrow">HeatMapAPI</p>
+          <h1>Density maps that stay seamless.</h1>
+          <p class="lede">Turn latitude, longitude, and value data into interactive heat maps for maps, dashboards, and GIS systems—without resending every point on every map movement.</p>
+          <div class="hero-actions"><a class="button" href="#demo">Explore the live map</a><a class="button secondary" href="#docs">Read the API</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section intro-section" id="about">
+      <div class="shell intro-grid">
+        <div>
+          <p class="eyebrow">What is a heat map?</p>
+          <h2>Make geographic patterns visible.</h2>
+        </div>
+        <div class="intro-copy">
+          <p>A heat map is a graphical representation of two-dimensional data using color and intensity. HeatMapAPI works with latitude, longitude, and value records to show where activity is concentrated and how values change geographically.</p>
+          <p>Instead of presenting users with a sea of individual points or polygons, a density surface makes clusters, gradients, trends, and hotspots easier to understand at a glance.</p>
+          <div class="benefit-row">
+            <article><span class="benefit-number">01</span><div><strong>Clarity</strong><p>Turn thousands of raw locations into a surface people can understand at a glance.</p></div></article>
+            <article><span class="benefit-number">02</span><div><strong>Insight</strong><p>See concentration, quiet areas, and regional differences without sorting through individual markers.</p></div></article>
+            <article><span class="benefit-number">03</span><div><strong>Flexibility</strong><p>Bring the same heat-map data into Leaflet, Google Maps, Mapbox, dashboards, or GIS tools.</p></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="why">
+      <div class="shell">
+        <div class="section-heading"><p class="eyebrow">Why HeatMapAPI</p><h2>Compute only what the map needs.</h2><p>The V7 architecture moves from viewport PNGs to reusable density tiles. The server calculates data; the browser owns presentation.</p></div>
+        <div class="feature-grid">
+          <article class="feature"><span class="feature-number">01</span><h3>Versioned datasets</h3><p>Upload or configure points once. Dataset versions invalidate cached output when source data changes.</p></article>
+          <article class="feature"><span class="feature-number">02</span><h3>Indexed tile queries</h3><p>Web Mercator source queries use a spatial index and include neighboring points whose kernels cross tile edges.</p></article>
+          <article class="feature"><span class="feature-number">03</span><h3>Browser color</h3><p>Uncolored float density travels over the wire. Change palettes without requesting density again.</p></article>
+          <article class="feature"><span class="feature-number">04</span><h3>Shared scaling</h3><p>Every visible tile uses the same color range, removing the per-tile normalization seams common to image APIs.</p></article>
+          <article class="feature"><span class="feature-number">05</span><h3>Two aggregation modes</h3><p>Addition emphasizes accumulated activity. Average preserves measurement values and can fade by kernel support.</p></article>
+          <article class="feature"><span class="feature-number">06</span><h3>Layered caching</h3><p>Server density caching and browser density/color caches keep repeated pans and style changes responsive.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" id="demo">
+      <div class="shell">
+        <div class="section-heading"><p class="eyebrow">Live HeatMapAPI example</p><h2>Thousands to millions of points. One interactive map.</h2><p>This working example connects a Leaflet map to the V7 density service. Pan, zoom, switch aggregation modes, recolor cached density, and compare Average edge fading. Tiles are calculated on demand while the browser handles the final visual presentation.</p></div>
+        <div class="demo-layout">
+          <aside class="demo-controls">
+            <label>Aggregation<select data-demo-mode><option value="addition">Addition</option><option value="average">Average</option></select></label>
+            <label>Palette<select data-demo-palette><option value="classic">Classic</option><option value="aurora">Aurora</option><option value="verdant">Verdant</option></select></label>
+            <label>Zoom-15 radius · <span data-radius-value>108</span>px<input data-demo-radius type="range" min="8" max="360" step="4" value="108"></label>
+            <label>Layer opacity<input data-demo-opacity type="range" min="0" max="1" step=".05" value=".82"></label>
+            <label class="check-row"><input data-demo-fade type="checkbox" checked> Average edge fade</label>
+            <div class="demo-status" data-demo-status>Connecting to HeatMapAPI…</div>
+          </aside>
+          <div id="public-map" aria-label="Interactive nationwide HeatMapAPI demonstration"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="shell">
+        <div class="section-heading"><p class="eyebrow">Architecture</p><h2>From source points to pixels.</h2><p>Each stage has one job, so storage, calculation, caching, and visual design can evolve independently.</p></div>
+        <div class="architecture">
+          <article><p class="eyebrow">01 · Source</p><h3>Dataset file</h3><p>Latitude, longitude, value records with a stable content version.</p></article>
+          <article><p class="eyebrow">02 · Server</p><h3>Spatial index</h3><p>Query only points capable of influencing the requested tile.</p></article>
+          <article><p class="eyebrow">03 · Wire</p><h3>Density tile</h3><p>Compact row-major float32 values, not a precolored PNG.</p></article>
+          <article><p class="eyebrow">04 · Browser</p><h3>Canvas overlay</h3><p>Shared scaling, palettes, alpha, and client-side export.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="docs">
+      <div class="shell docs-grid">
+        <div class="docs-copy"><p class="eyebrow">Documentation</p><h2>Simple to connect.</h2><p class="lede">Choose your dataset and map tile. The same data and settings will always give you the same result.</p><a class="button" data-github-link href="https://github.com/jalundgren/HeatmapAPI">View source on GitHub</a></div>
+        <div class="docs-list">
+          <article class="doc-card"><h3>Dataset format</h3><p>One record per line using invariant numeric formatting:</p><div class="code-wrap"><button class="copy" data-copy="#dataset-code">Copy</button><pre id="dataset-code">latitude,longitude,value
+39.7392,-104.9903,10</pre></div></article>
+          <article class="doc-card"><h3>Inspect a dataset</h3><div class="code-wrap"><button class="copy" data-copy="#metadata-code">Copy</button><pre id="metadata-code">GET /api/datasets/demo
+
+{"id":"demo","version":"…","count":10000}</pre></div></article>
+          <article class="doc-card"><h3>Request a density tile</h3><div class="code-wrap"><button class="copy" data-copy="#tile-code">Copy</button><pre id="tile-code">GET /api/datasets/demo/tiles/{z}/{x}/{y}
+    ?mode=addition
+    &radius=27</pre></div><p>The radius is measured at zoom 15 and follows the documented zoom curve. Responses include dataset version, density range, effective radius, ETag, and immutable cache headers.</p></article>
+          <article class="doc-card"><h3>Aggregation behavior</h3><ul><li><strong>Addition:</strong> <code>Σ(value × weight)</code>; empty pixels are zero.</li><li><strong>Average:</strong> <code>Σ(value × weight) / Σ(weight)</code>; empty pixels are NaN and support can soften alpha at kernel edges.</li></ul></article>
+          <article class="doc-card"><h3>Client integration</h3><div class="code-wrap"><button class="copy" data-copy="#client-code">Copy</button><pre id="client-code">const layer = new HeatmapDensityLayer({
+  baseUrl: 'https://your-api.run.app',
+  dataset: 'demo',
+  mode: 'addition',
+  radius: 27,
+  palette
+});
+await layer.initialize();</pre></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta"><div class="shell"><div class="cta-inner"><p class="eyebrow">Build with density, not images</p><h2>Ready to replace the old PNG workflow?</h2><p>Run HeatMapAPI locally, connect a versioned dataset, and use the browser layer as the foundation for Leaflet, Mapbox, Google Maps, or your own canvas integration.</p><div class="hero-actions centered"><a class="button" data-github-link href="https://github.com/jalundgren/HeatmapAPI">Open the GitHub repository</a><a class="button contact-button" href="https://github.com/jalundgren">Contact on GitHub</a></div><small>Contact me for questions about hosting your own API or implementing commercial solutions.</small></div></div></section>
+  </main>
+
+  <footer><div class="shell footer-row"><span>© <span data-year></span> HeatMapAPI</span><span>Reusable map tiles · colors shaped in your browser</span></div></footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+  <script type="module" src="./assets/site.js"></script>
+  <script type="module" src="./assets/demo.js"></script>
+</body>
+</html>
