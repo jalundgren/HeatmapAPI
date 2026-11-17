@@ -18,11 +18,13 @@ function colorForNormalizedDensity(palette, normalized, firstVisibleIndex = -1) 
 }
 
 export class HeatmapDensityLayer {
-  constructor({ baseUrl = '', dataset, mode = 'addition', radius = 27, palette, averageSupportAlpha = true } = {}) {
+  constructor({ baseUrl = '', dataset, mode = 'addition', radius = 27, palette, averageSupportAlpha = true, densityCacheLimit = 192, colorCacheLimit = 96 } = {}) {
     this.baseUrl = baseUrl; this.dataset = dataset; this.mode = mode; this.radius = radius;
     this.averageSupportAlpha = averageSupportAlpha;
     this.palette = palette || [[0, 0, 0, 0], [255, 255, 255, 255]];
     this.firstVisibleColorIndex = this.palette.findIndex(color => color[3] > 0);
+    this.densityCacheLimit = Math.max(1, Math.trunc(densityCacheLimit));
+    this.colorCacheLimit = Math.max(1, Math.trunc(colorCacheLimit));
     this.version = null; this.densityCache = new Map(); this.colorCache = new Map();
   }
 
@@ -35,16 +37,29 @@ export class HeatmapDensityLayer {
 
   identity(z, x, y) { return `${this.dataset}/${this.version}/${z}/${x}/${y}/${this.mode}/r${this.radius}/${RADIUS_CURVE_VERSION}/${AVERAGE_SUPPORT_VERSION}`; }
 
+  cacheGet(cache, key) {
+    if (!cache.has(key)) return undefined;
+    const value = cache.get(key);
+    cache.delete(key); cache.set(key, value);
+    return value;
+  }
+
+  cacheSet(cache, key, value, limit) {
+    cache.delete(key); cache.set(key, value);
+    while (cache.size > limit) cache.delete(cache.keys().next().value);
+  }
+
   async getTile(z, x, y) {
     if (!this.version) await this.initialize();
     const key = this.identity(z, x, y);
-    if (this.densityCache.has(key)) return this.densityCache.get(key);
-    const pending = fetch(`${this.baseUrl}/api/datasets/${encodeURIComponent(this.dataset)}/tiles/${z}/${x}/${y}?mode=${this.mode}&radius=${this.radius}&curve=${RADIUS_CURVE_VERSION}&support=${AVERAGE_SUPPORT_VERSION}`)
+    const cached = this.cacheGet(this.densityCache, key);
+    if (cached) return cached;
+    const pending = fetch(`${this.baseUrl}/api/datasets/${encodeURIComponent(this.dataset)}/tiles/${z}/${x}/${y}?version=${encodeURIComponent(this.version)}&mode=${this.mode}&radius=${this.radius}&curve=${RADIUS_CURVE_VERSION}&support=${AVERAGE_SUPPORT_VERSION}`)
       .then(async response => {
         if (!response.ok) throw new Error(await response.text());
         return this.decode(await response.arrayBuffer(), key, Number(response.headers.get('X-Effective-Radius')));
       });
-    this.densityCache.set(key, pending);
+    this.cacheSet(this.densityCache, key, pending, this.densityCacheLimit);
     try { return await pending; } catch (error) { this.densityCache.delete(key); throw error; }
   }
 
@@ -73,7 +88,8 @@ export class HeatmapDensityLayer {
 
   render(tile, range = { min: 0, max: 1 }) {
     const colorKey = `${tile.key}/${range.min}/${range.max}/${this.averageSupportAlpha}/${JSON.stringify(this.palette)}`;
-    if (this.colorCache.has(colorKey)) return this.colorCache.get(colorKey);
+    const cached = this.cacheGet(this.colorCache, colorKey);
+    if (cached) return cached;
     const canvas = document.createElement('canvas'); canvas.width = tile.width; canvas.height = tile.height;
     const context = canvas.getContext('2d'), image = context.createImageData(tile.width, tile.height);
     for (let i = 0; i < tile.values.length; i++) {
@@ -87,15 +103,15 @@ export class HeatmapDensityLayer {
         image.data[i * 4 + 3] = color[3] * Math.max(0, Math.min(1, tile.support[i]));
       }
     }
-    context.putImageData(image, 0, 0); this.colorCache.set(colorKey, canvas); return canvas;
+    context.putImageData(image, 0, 0); this.cacheSet(this.colorCache, colorKey, canvas, this.colorCacheLimit); return canvas;
   }
 
   setColorSettings(palette) {
     this.palette = palette;
     this.firstVisibleColorIndex = palette.findIndex(color => color[3] > 0);
-    /* Density cache deliberately retained; the color-cache key includes the palette. */
+    this.colorCache.clear();
   }
-  setAverageSupportAlpha(enabled) { this.averageSupportAlpha = Boolean(enabled); }
+  setAverageSupportAlpha(enabled) { this.averageSupportAlpha = Boolean(enabled); this.colorCache.clear(); }
   clearCache() {
     this.densityCache.clear();
     this.colorCache.clear();
